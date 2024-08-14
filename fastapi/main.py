@@ -25,7 +25,6 @@ app.add_middleware(
 )
 
 
-
 # 모델과 프로세서 로드
 processor = AutoImageProcessor.from_pretrained("dima806/facial_emotions_image_detection")
 model = AutoModelForImageClassification.from_pretrained("dima806/facial_emotions_image_detection")
