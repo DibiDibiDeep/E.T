@@ -1,0 +1,41 @@
+.container{
+    width: 1500px;
+    min-height: 750px;
+    margin: 0 auto;
+}
+
+.containerBox{
+    width: 1500px;
+    margin: 0 auto;
+}
+
+.boxWrapper{
+    width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.mainText{
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.logo1{
+    display: flex;
+    margin: 0 auto;
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.camBox{
+    display: flex;
+    justify-items: center;
+}
+
+.cam{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    margin: 0 auto;
+}

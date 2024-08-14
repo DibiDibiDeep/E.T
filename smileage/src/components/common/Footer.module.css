@@ -1,0 +1,26 @@
+footer{
+    display: flex;
+    margin: 0 auto;
+    margin-top: 38px;
+    width: 1500px;
+    height: 44px;
+    background-color: #ff9f00;
+    border-radius: 10px;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+.all{
+    width: 1180px;
+}
+
+.container{
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-right: 30px;
+}

@@ -18,7 +18,7 @@ model = AutoModelForImageClassification.from_pretrained("dima806/facial_emotions
 # STEP3: Load input data
 # from capture.capture import capture_image
 # test_frame = capture_image('test.png') # capture
-image = Image.open('images/test.png') # sample image
+image = Image.open('../images/test.jpg') # sample image
 inputs = processor(images=image, return_tensors="pt") # image: PIL로 읽은 이미지
 
 
@@ -58,3 +58,4 @@ print('\n===========================================')
 # 상위 3개의 결과를 순위와 함께 출력
 for rank, (class_name, logit, probability) in enumerate(results[:3], start=1):
     print(f"Rank: {rank}, Class: {class_name}\t Probability: {probability}")
+    
