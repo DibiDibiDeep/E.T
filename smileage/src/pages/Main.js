@@ -8,6 +8,8 @@ const App = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const overlayRef = useRef(null);
+    const fireworksContainerRef = useRef(null);
     let countdownTimer;
 
     useEffect(() => {
@@ -19,6 +21,12 @@ const App = () => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (modalVisible) {
+            triggerFireworks();
+        }
+    }, [modalVisible]);
 
     const startVideo = async () => {
         try {
@@ -67,8 +75,8 @@ const App = () => {
         let countdown = 3;
 
         countdownTimer = setInterval(() => {
-            if (countdown > 0) {
-                document.getElementById('overlay').textContent = countdown;
+            if (countdown > 0 && overlayRef.current) {
+                overlayRef.current.textContent = countdown;
                 countdown--;
             } else {
                 clearInterval(countdownTimer);
@@ -83,6 +91,22 @@ const App = () => {
         sendImageToServer(imageData);
     };
 
+    const triggerFireworks = () => {
+        const container = fireworksContainerRef.current;
+        for (let i = 0; i < 20; i++) { // 폭죽 수
+            const firework = document.createElement('div');
+            firework.className = styles.firework;
+            firework.style.top = `${Math.random() * 100}%`;
+            firework.style.left = `${Math.random() * 100}%`;
+            firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`; // 무작위 색상
+            container.appendChild(firework);
+
+            setTimeout(() => {
+                firework.remove();
+            }, 1000); // 1초 후에 폭죽을 제거
+        }
+    };
+
     const closeModal = () => {
         setModalVisible(false);
         setCapturedImage('');
@@ -95,29 +119,31 @@ const App = () => {
                 <img src="/images/logo.png" alt="Logo"/><br/>
                 <h1>얼굴 근육에 smilage를 쌓아라!</h1>
             </div>
-            <div id="main">
-                <video id="video" ref={videoRef} autoPlay playsInline></video>
-                <canvas id="canvas" ref={canvasRef} style={{ display: 'none' }}></canvas>
-                {overlayVisible && <div id="overlay"></div>}
+            <div id={styles.main}>
+                <video ref={videoRef} autoPlay playsInline></video>
+                <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                {overlayVisible && <div ref={overlayRef} className={styles.overlay}></div>}
             </div>
-            <div id="btnArea">
-                <button type="button" id="startBtn" onClick={startCountdown}>Smile~</button>
+            <div id={styles.btnArea}>
+                <button type="button" id={styles.startBtn} onClick={startCountdown}>Smile~</button>
             </div>
+
+            {/* 폭죽 애니메이션 컨테이너 */}
+            <div id="fireworks-container" ref={fireworksContainerRef}></div>
 
             {/* Modal for showing analysis results */}
             {modalVisible && (
-                <div id="modal">
-                <div id="resultArea">
-                        {capturedImage && <img id="capturedImage" src={capturedImage} alt="Captured Image" />}
-                </div>
-                    <div id="modalContent">
-                        <span id="closeModal" onClick={closeModal}>&times;</span>
-                        <h2>결과창</h2>
-                        <pre id="result">{analysisResult}</pre>
+                <>
+                    <div className={styles.modalOverlay}></div>
+                    <div className={styles.modalContent}>
+                        <div id={styles.resultArea}>
+                            {capturedImage && <img id={styles.capturedImage} src={capturedImage} alt="Captured Image" />}
+                        </div>
+                        <pre id={styles.result}>{analysisResult}</pre>
+                        <button id={styles.closeModal} onClick={closeModal}>닫기</button>
                     </div>
-                </div>
+                </>
             )}
-
         </div>
     );
 };
