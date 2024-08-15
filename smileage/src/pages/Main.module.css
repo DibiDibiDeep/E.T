@@ -30,6 +30,11 @@ video {
     font-weight: bold;
 }
 
+.videoMirror {
+    transform: scaleX(-1);
+}
+
+
 #btnArea {
     margin: 20px 0;
     text-align: center;

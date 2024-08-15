@@ -8,7 +8,7 @@ const App = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const overlayRef = useRef(null);
+    const overlayRef = useRef(null);b 
     const fireworksContainerRef = useRef(null);
     let countdownTimer;
 
@@ -44,7 +44,10 @@ const App = () => {
         
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        context.save(); // 이전 상태 저장
+        context.scale(-1, 1); // 좌우 반전
+        context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height); // 좌우 반전 후 이미지 그리기
+        context.restore(); // 이전 상태로 복원
         const imageData = canvas.toDataURL('image/jpeg');
         
         setCapturedImage(imageData);
@@ -116,11 +119,11 @@ const App = () => {
     return (
         <div id={styles.wrap}>
             <div id={styles.header}>
-                <img src="/images/logo.png" alt="Logo"/><br/>
+                <img src="../src/images/logo.png" alt="Logo"/><br/>
                 <h1>얼굴 근육에 smilage를 쌓아라!</h1>
             </div>
             <div id={styles.main}>
-                <video ref={videoRef} autoPlay playsInline></video>
+                <video className={styles.videoMirror} ref={videoRef} autoPlay playsInline></video>
                 <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                 {overlayVisible && <div ref={overlayRef} className={styles.overlay}></div>}
             </div>
