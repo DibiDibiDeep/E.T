@@ -3,14 +3,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import styles from './Main.module.css';
+import html2canvas from 'html2canvas';
 
 function Main() {
     const videoRef = useRef(null);
     const [predictions, setPredictions] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('');
+    const [countdown, setCountdown] = useState(0); // 카운트다운 상태 추가
+    const [capturedImage, setCapturedImage] = useState(null); // 캡처된 이미지 상태 추가
 
-    // 사용자 웹캠에 접근
     const getUserCamera = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
@@ -27,37 +29,67 @@ function Main() {
         getUserCamera();
     }, [videoRef]);
 
-        // 캡처한 이미지를 서버로 전송
-        const captureImage = () => {
-            const canvas = document.createElement('canvas');
-            const video = videoRef.current;
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob((blob) => {
-                const file = new File([blob], 'capture.png', { type: 'image/png' });
-                sendToServer(file); // 서버로 전송
-            }, 'image/png');
-        };
-    
-        const sendToServer = async (file) => {
-            const formData = new FormData();
-            formData.append('file', file);
-    
-            try {
-                const response = await axios.post('http://localhost:8000/predict', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                setPredictions(response.data.predictions);
-            } catch (error) {
-                console.error('Error sending image to server:', error);
-            }
-        };
+    const captureImage = () => {
+        setCountdown(3); // 카운트다운 시작
+        const countdownInterval = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev === 1) {
+                    clearInterval(countdownInterval); // 카운트다운 종료
+                    takePicture(); // 3초 후 사진 촬영
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    };
 
-    const handleClose = () => setShowModal(false);
+    const takePicture = () => {
+        const canvas = document.createElement('canvas');
+        const video = videoRef.current;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+            const file = new File([blob], 'test.jpg', { type: 'image/jpg' }); // 파일명을 'test.png'로 설정
+            setCapturedImage(URL.createObjectURL(blob));
+            sendToServer(file);
+        }, 'image/jpg');
+    };
+
+    const sendToServer = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post('http://localhost:8000/predict', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setPredictions(response.data.predictions);
+            setShowModal(true);
+        } catch (error) {
+            console.error('Error sending image to server:', error.response ? error.response.data : error.message);
+            // 사용자에게 오류 메시지 표시
+            setMessage(`Error: ${error.response?.data?.error || 'Unknown error occurred'}`);
+            setShowModal(true);
+        }
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+        setCountdown(0); // 모달 닫을 때 카운트다운 초기화
+    };
+
+    const handleSave = () => {
+        const modalContent = document.querySelector(`.${styles.modalContent}`);
+        html2canvas(modalContent).then((canvas) => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'modal-image.png';
+            link.click();
+        });
+    };
 
     return (
         <>
@@ -70,29 +102,44 @@ function Main() {
                             </div>
                             <hr className={styles.line1} />
                             <div className={styles.camBox}>
-                                <video className='container' ref={videoRef}></video>
+                                <div className={styles.videoWrapper}> {/* 새로운 부모 div */}
+                                    <video className={styles.video} ref={videoRef}></video>
+                                    {countdown > 0 && ( // 카운트다운 표시
+                                        <div className={styles.countdownOverlay}>
+                                            {countdown}
+                                        </div>
+                                    )}
+                                </div>
+                                <button onClick={captureImage} className={styles.btn1}>Capture</button>
                             </div>
-                            <button onClick={captureImage}>Capture and Predict</button>
                             {/* Modal for showing predictions */}
-                            <Modal show={showModal} onHide={handleClose}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Emotion Detection Result</Modal.Title>
+                            <Modal show={showModal}>
+                                <Modal.Header>
+                                    <Modal.Title className={styles.modalTitle}>Smileage 결과</Modal.Title>
                                 </Modal.Header>
-                                <Modal.Body>
+                                <Modal.Body className={styles.modalContent}>
+                                    {capturedImage && (
+                                        <div className={styles.imagePreview}>
+                                            <img src={capturedImage} alt="Captured" className={styles.capturedImage} />
+                                        </div>
+                                    )}
                                     <p>{message}</p>
                                     {predictions.length > 0 && (
                                         <ul>
                                             {predictions.map((prediction, index) => (
                                                 <li key={index}>
-                                                    {prediction.class}: {prediction.probability}
+                                                    {prediction.class}: {prediction.probability * 100}%
                                                 </li>
                                             ))}
                                         </ul>
                                     )}
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button variant="secondary" onClick={handleClose}>
+                                    <Button variant="secondary" onClick={handleClose} className={styles.closeBtn}>
                                         Close
+                                    </Button>
+                                    <Button variant="primary" onClick={handleSave} className={styles.saveBtn}>
+                                        Save
                                     </Button>
                                 </Modal.Footer>
                             </Modal>
