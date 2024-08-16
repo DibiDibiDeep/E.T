@@ -1,0 +1,233 @@
+div#wrap {
+  width: 800px;
+  border: 4px solid #fecdc0;
+  height: 800px;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 20px auto;
+}
+
+header#header {
+  height: 200px;
+}
+
+main#main {
+  width: 800px;
+  border: 1px solid #000;
+  height: 600px;
+}
+
+main#main>video {
+  width: 800px;
+}
+
+div#btnArea {
+  border: 1px solid #fff3f1;
+  background-color: #fff3f1;
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+}
+
+div#btnArea>p {
+  color: #4036a3;
+  margin-left: 150px;
+  font-size: 18px;
+}
+
+button#startBtn {
+  width: 300px;
+  border-radius: 6px;
+  background-color: #4036a3;
+  color: #ffffff;
+  font-size: 18px;
+  text-align: center;
+  margin-left: 50px;
+}
+
+button#startBtn:hover {
+  cursor: pointer;
+  background-color: #aca6c7;
+  color: #000;
+}
+
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#main {
+  position: relative;
+  width: 80%;
+  height: 80%;
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+}
+
+#countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5em;
+  color: #000;
+  font-weight: bold;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  /* 약간 검정색 배경 */
+  z-index: 999;
+  /* 모달보다 아래 */
+}
+
+/* 별이 반짝이는 배경 */
+#emotionModal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f4d8a8;
+  background-size: cover;
+  opacity: 0.75;
+  animation: twinkling 1.5s infinite;
+  z-index: -1;
+  /* 모달보다 뒤에 오도록 설정 */
+}
+
+/* 모달 스타일 */
+div.emotion-info {
+  background-color: rgba(255, 255, 255, 0.005);
+  width: 300px;
+  border-radius: 12px;
+}
+
+#emotionModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #000;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  text-align: center;
+  width: 600px;
+  height: 800px;
+  /* 높이를 자동으로 조정하여 내용에 맞게 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#emotionModal img {
+  width: 90%;
+  max-height: 50%;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #000;
+}
+
+#emotionModal .emotion-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  margin-top: 50px;
+}
+
+#emotionModal .emotion-name {
+  font-weight: bold;
+  font-size: 24px;
+  /* 감정 글씨 크기 조정 */
+  margin-right: 20px;
+  /* 감정과 확률 사이의 띄어쓰기 */
+}
+
+#emotionModal .emotion-probability {
+  font-weight: bold;
+  font-size: 24px;
+  /* 확률 글씨 크기 조정 */
+}
+
+#emotionModal button {
+  padding: 10px 20px;
+  font-size: 20px;
+  /* 버튼 글씨 크기 조정 */
+  border-radius: 6px;
+  background-color: #4036a3;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#emotionModal button:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+/* 원형 게이지 스타일 */
+.progressCircle {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 20px auto;
+}
+
+.progressCircle svg {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  transform: rotate(-90deg);
+}
+
+.progressCircle circle {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke-width: 20;
+  stroke: #e6e6e6;
+  cx: 70;
+  cy: 70;
+  r: 60;
+  stroke-dasharray: 377;
+  stroke-dashoffset: 0;
+}
+
+.progressCircle circle:nth-child(2) {
+  stroke: #fad400;
+  /* 게이지 색상 */
+  stroke-linecap: round;
+  stroke-dashoffset: 377;
+  /* 초기 상태에서 가려진 상태 */
+  transition: stroke-dashoffset 1s ease;
+  /* 애니메이션 */
+}
+
+.percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
