@@ -88,50 +88,100 @@
     font-weight: bold;
 }
 
-.modalTitle{
-    text-align: center; /* 텍스트를 가운데 정렬 */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+.modal-content {
+    display: flex;
+    background-color: #ff9f00;
+    border-radius: 20px;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modalTitle {
+    display: flex;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
     width: 100%;
 }
 
 .imagePreview {
     text-align: center;
     margin-bottom: 20px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .capturedImage {
     max-width: 100%;
-    height: auto;
-    object-fit: cover;
+    border-radius: 10px;
 }
 
-.closeBtn{
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    text-align: center;
-    border: none;
-    width: 100px;
-    height: 40px;
-    border-radius: 5px;
-    background-color: #ff9f00;
-    color: white;
+.emotionResult {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+.mainEmotion {
+    font-size: 28px;
     font-weight: bold;
-}
-
-.modalContent {
-    position: relative; /* 캡처를 위한 위치 설정 */
-}
-
-.saveBtn {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
     text-align: center;
-    border: none;
-    width: 100px;
-    height: 40px;
-    border-radius: 5px;
-    background-color: #ff9f00;
-    color: white;
-    font-weight: bold;
+    margin-bottom: 15px;
 }
+  
+.otherEmotions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+  
+.emotionItem {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    flex: 1 1 40%;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.closeBtn, .saveBtn {
+    background-color: white;
+    border: none;
+    color: #ff9f00;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    flex: 1;
+    margin: 0 10px;
+}
+
+.closeBtn:hover, .saveBtn:hover {
+    background-color: #ff9f00;
+}
+
+.modalContent ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+
+/* 원형게이지 */

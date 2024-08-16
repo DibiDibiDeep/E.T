@@ -5,13 +5,25 @@ import { Modal, Button } from 'react-bootstrap';
 import styles from './Main.module.css';
 import html2canvas from 'html2canvas';
 
+const emotionTranslations = {
+    "happy": "행복",
+    "sad": "슬픔",
+    "angry": "화남",
+    "surprise": "놀람",
+    "neutral": "평온"
+};
+
+const translateEmotion = (emotion) => {
+    return emotionTranslations[emotion] || emotion; // 매핑이 없으면 원래 감정 이름을 반환
+};
+
 function Main() {
     const videoRef = useRef(null);
     const [predictions, setPredictions] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('');
-    const [countdown, setCountdown] = useState(0); // 카운트다운 상태 추가
-    const [capturedImage, setCapturedImage] = useState(null); // 캡처된 이미지 상태 추가
+    const [countdown, setCountdown] = useState(0);
+    const [capturedImage, setCapturedImage] = useState(null);
 
     const getUserCamera = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -30,12 +42,12 @@ function Main() {
     }, [videoRef]);
 
     const captureImage = () => {
-        setCountdown(3); // 카운트다운 시작
+        setCountdown(3);
         const countdownInterval = setInterval(() => {
             setCountdown((prev) => {
                 if (prev === 1) {
-                    clearInterval(countdownInterval); // 카운트다운 종료
-                    takePicture(); // 3초 후 사진 촬영
+                    clearInterval(countdownInterval);
+                    takePicture();
                 }
                 return prev - 1;
             });
@@ -50,7 +62,7 @@ function Main() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         canvas.toBlob((blob) => {
-            const file = new File([blob], 'test.jpg', { type: 'image/jpg' }); // 파일명을 'test.png'로 설정
+            const file = new File([blob], 'test.jpg', { type: 'image/jpg' });
             setCapturedImage(URL.createObjectURL(blob));
             sendToServer(file);
         }, 'image/jpg');
@@ -70,7 +82,6 @@ function Main() {
             setShowModal(true);
         } catch (error) {
             console.error('Error sending image to server:', error.response ? error.response.data : error.message);
-            // 사용자에게 오류 메시지 표시
             setMessage(`Error: ${error.response?.data?.error || 'Unknown error occurred'}`);
             setShowModal(true);
         }
@@ -78,7 +89,7 @@ function Main() {
 
     const handleClose = () => {
         setShowModal(false);
-        setCountdown(0); // 모달 닫을 때 카운트다운 초기화
+        setCountdown(0);
     };
 
     const handleSave = () => {
@@ -102,9 +113,9 @@ function Main() {
                             </div>
                             <hr className={styles.line1} />
                             <div className={styles.camBox}>
-                                <div className={styles.videoWrapper}> {/* 새로운 부모 div */}
+                                <div className={styles.videoWrapper}>
                                     <video className={styles.video} ref={videoRef}></video>
-                                    {countdown > 0 && ( // 카운트다운 표시
+                                    {countdown > 0 && (
                                         <div className={styles.countdownOverlay}>
                                             {countdown}
                                         </div>
@@ -112,29 +123,31 @@ function Main() {
                                 </div>
                                 <button onClick={captureImage} className={styles.btn1}>Capture</button>
                             </div>
-                            {/* Modal for showing predictions */}
                             <Modal show={showModal}>
-                                <Modal.Header>
-                                    <Modal.Title className={styles.modalTitle}>Smileage 결과</Modal.Title>
-                                </Modal.Header>
                                 <Modal.Body className={styles.modalContent}>
                                     {capturedImage && (
                                         <div className={styles.imagePreview}>
                                             <img src={capturedImage} alt="Captured" className={styles.capturedImage} />
                                         </div>
                                     )}
-                                    <p>{message}</p>
-                                    {predictions.length > 0 && (
-                                        <ul>
-                                            {predictions.map((prediction, index) => (
-                                                <li key={index}>
-                                                    {prediction.class}: {prediction.probability * 100}%
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
+                                    <div className={styles.emotionResult}>
+                                        {predictions.length > 0 && (
+                                            <>
+                                                <div className={styles.mainEmotion}>
+                                                    {translateEmotion(predictions[0].class)}: {Math.round(predictions[0].probability * 100)}%
+                                                </div>
+                                                <div className={styles.otherEmotions}>
+                                                    {predictions.slice(1).map((prediction, index) => (
+                                                        <div key={index} className={styles.emotionItem}>
+                                                            {translateEmotion(prediction.class)}: {Math.round(prediction.probability * 100)}%
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
                                 </Modal.Body>
-                                <Modal.Footer>
+                                <Modal.Footer className={styles.buttonContainer}>
                                     <Button variant="secondary" onClick={handleClose} className={styles.closeBtn}>
                                         Close
                                     </Button>
