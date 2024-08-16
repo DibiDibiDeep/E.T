@@ -57,9 +57,9 @@ async def analyze(file: UploadFile = File(...)):
             ))
 
         results.sort(key=lambda x: x.probability, reverse=True)
-        top_results3 = results[:3]
+        top_results = results[:1]
 
-        return {"predictions": top_results3}
+        return {"predictions": top_results}
     
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
