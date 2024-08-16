@@ -102,7 +102,6 @@ const App = () => {
 
     const startCountdown = () => {
         setOverlayVisible(true);
-        setFlashVisible(false);
         let countdown = 3;
 
         countdownTimer = setInterval(() => {
@@ -111,13 +110,11 @@ const App = () => {
                 countdown--;
             } else if (countdown === 0) {
                 overlayRef.current.textContent = 'Smile!';
-                setFlashVisible(true);
                 setTimeout(() => {
-                    setFlashVisible(false);
                     clearInterval(countdownTimer);
                     setOverlayVisible(false);
                     takePicture();
-                }, 500); // 하얗게 반짝이는 효과가 끝나면 사진 촬영
+                }, 500);
             }
         }, 1000);
     };
@@ -145,7 +142,6 @@ const App = () => {
                 <video id={styles.video} ref={videoRef} autoPlay playsInline></video>
                 <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                 {overlayVisible && <div ref={overlayRef} id={styles.overlay}></div>}
-                {flashVisible && <div className={styles.flash}></div>}
             </div>
             <div id={styles.btnArea}>
                 <button type="button" id={styles.startBtn} onClick={startCountdown}>Smile</button>

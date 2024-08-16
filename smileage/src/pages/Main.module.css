@@ -20,10 +20,10 @@ body {
 
 #overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 75px;
+    left: 15px;
+    width: 95%;
+    height: 71.5%;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
@@ -171,22 +171,4 @@ body {
     transform: translate(-50%, -50%);
     font-size: 1.5rem;
     font-weight: bold;
-}
-
-/* 하얗게 반짝이는 효과 */
-.flash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: white;
-    opacity: 0;
-    z-index: 999;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-.flash.show {
-    opacity: 1;
 }
