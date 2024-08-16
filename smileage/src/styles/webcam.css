@@ -1,0 +1,23 @@
+.webcam-container {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+}
+  
+#webcam {
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+}
+  
+.start-button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.captured-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}

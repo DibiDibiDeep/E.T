@@ -1,10 +1,9 @@
-import styles from './Main.module.css'
+import WebcamCapture from './WebcamCapture';
 
 function Main() {
-
     return(
         <>
-            <h1>hi</h1>
+            <WebcamCapture/>
         </>
     )
 }
