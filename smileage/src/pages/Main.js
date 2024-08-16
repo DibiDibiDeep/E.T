@@ -9,12 +9,9 @@ const App = () => {
     const [displayedProbability, setDisplayedProbability] = useState(0); // 화면에 보여질 확률
     const [modalVisible, setModalVisible] = useState(false);
     const [showEmotion, setShowEmotion] = useState(false); // 감정 이름 표시 상태
-    const [showSuccess, setShowSuccess] = useState(false); // 성공 메시지 표시 상태
-    const [flashVisible, setFlashVisible] = useState(false); // 하얗게 반짝이는 효과 상태
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const overlayRef = useRef(null);
-    const flashRef = useRef(null);
     let countdownTimer;
 
     useEffect(() => {
@@ -70,7 +67,7 @@ const App = () => {
             // 분석 결과에서 감정 이름과 확률 추출
             const { class_name, probability } = result.predictions[0];
             setEmotionName(class_name);
-            setEmotionProbability((probability * 100).toFixed(10)); // 소수점 첫째 자리까지 표시
+            setEmotionProbability((probability * 100).toFixed(10));
 
             // 감정 이름을 애니메이션으로 표시
             setShowEmotion(true);
@@ -78,7 +75,7 @@ const App = () => {
 
             // 2초 후 확률 게이지 애니메이션 시작
             setTimeout(() => {
-                animateProbability(0, parseFloat((probability * 100).toFixed(10)));
+                animateProbability(0, parseFloat(emotionProbability));
             }, 2000);
 
         } catch (error) {
@@ -87,17 +84,16 @@ const App = () => {
     };
 
     const animateProbability = (start, end) => {
-        let current = start;
-        const increment = (end - start) / 50; // 50번에 걸쳐 천천히 증가
+        let emotionProbability = start;
+        const increment = (end - start) / 100; // 50번에 걸쳐 천천히 증가
         const interval = setInterval(() => {
-            current += increment;
-            if (current >= end) {
-                current = end;
+            emotionProbability += increment;
+            if (emotionProbability >= end) {
+                emotionProbability = end;
                 clearInterval(interval);
-
             }
-            setDisplayedProbability(current.toFixed(10)); 
-        }, 20); // 20ms마다 업데이트 
+            setDisplayedProbability(emotionProbability.toFixed(10)); 
+        }, 30); // 20ms마다 업데이트 
     };
 
     const startCountdown = () => {
@@ -121,15 +117,14 @@ const App = () => {
 
     const takePicture = () => {
         const imageData = captureImage();
-        sendImageToServer(imageData);
+        sendImageToServer(imageData)
     };
 
     const closeModal = () => {
         setModalVisible(false);
         setCapturedImage('');
-        setShowEmotion(false); // 감정 이름 초기화
-        setDisplayedProbability(0); // 확률 초기화
-        setShowSuccess(false); // 성공 메시지 초기화
+        setShowEmotion(false);
+        setDisplayedProbability(0);
         startVideo();
     };
 
