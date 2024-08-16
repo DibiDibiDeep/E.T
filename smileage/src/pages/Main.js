@@ -24,6 +24,7 @@ function Main() {
     const [message, setMessage] = useState('');
     const [countdown, setCountdown] = useState(0);
     const [capturedImage, setCapturedImage] = useState(null);
+    const [displayedProbability, setDisplayedProbability] = useState(0);
 
     const getUserCamera = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -79,6 +80,7 @@ function Main() {
                 }
             });
             setPredictions(response.data.predictions);
+            animateProbability(0, Math.round(response.data.predictions[0].probability * 100));
             setShowModal(true);
         } catch (error) {
             console.error('Error sending image to server:', error.response ? error.response.data : error.message);
@@ -89,6 +91,7 @@ function Main() {
 
     const handleClose = () => {
         setShowModal(false);
+        setDisplayedProbability(0);
         setCountdown(0);
     };
 
@@ -100,6 +103,19 @@ function Main() {
             link.download = 'modal-image.png';
             link.click();
         });
+    };
+
+    const animateProbability = (start, end) => {
+        let emotionProbability = start;
+        const increment = (end - start) / 100;
+        const interval = setInterval(() => {
+            emotionProbability += increment;
+            if (emotionProbability >= end) {
+                emotionProbability = end;
+                clearInterval(interval);
+            }
+            setDisplayedProbability(emotionProbability.toFixed(2)); // 소수점 둘째 자리까지
+        }, 30); // 30ms마다 업데이트 
     };
 
     return (
@@ -123,7 +139,7 @@ function Main() {
                                 </div>
                                 <button onClick={captureImage} className={styles.btn1}>Capture</button>
                             </div>
-                            <Modal show={showModal}>
+                            <Modal show={showModal} className={styles.modalBox}>
                                 <Modal.Body className={styles.modalContent}>
                                     {capturedImage && (
                                         <div className={styles.imagePreview}>
@@ -131,17 +147,25 @@ function Main() {
                                         </div>
                                     )}
                                     <div className={styles.emotionResult}>
+                                        <div>
+                                            Smileage #1
+                                        </div>
                                         {predictions.length > 0 && (
                                             <>
-                                                <div className={styles.mainEmotion}>
-                                                    {translateEmotion(predictions[0].class)}: {Math.round(predictions[0].probability * 100)}%
-                                                </div>
-                                                <div className={styles.otherEmotions}>
-                                                    {predictions.slice(1).map((prediction, index) => (
-                                                        <div key={index} className={styles.emotionItem}>
-                                                            {translateEmotion(prediction.class)}: {Math.round(prediction.probability * 100)}%
-                                                        </div>
-                                                    ))}
+                                                <div className={styles.progressCircle}>
+                                                    <svg>
+                                                        <circle cx="70" cy="70" r="60"></circle>
+                                                        <circle
+                                                            cx="70"
+                                                            cy="70"
+                                                            r="60"
+                                                            style={{
+                                                                strokeDashoffset: `calc(377 - (377 * ${displayedProbability}) / 100)`
+                                                            }}
+                                                        ></circle>
+                                                    </svg>
+                                                    <div className={styles.percentage}>{translateEmotion(predictions[0].class)}: {Math.round(predictions[0].probability * 100)}%</div>
+                                                    
                                                 </div>
                                             </>
                                         )}

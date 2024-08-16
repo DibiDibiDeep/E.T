@@ -88,19 +88,14 @@
     font-weight: bold;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+.modalBox{
+    border-radius: 40px;
+}
 
-.modal-content {
-    display: flex;
+.modalContent {
     background-color: #ff9f00;
-    border-radius: 20px;
+    border-radius: 5px;
     color: white;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .modalTitle {
@@ -115,7 +110,6 @@
 .imagePreview {
     text-align: center;
     margin-bottom: 20px;
-    background-color: white;
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 20px;
@@ -127,11 +121,10 @@
 }
 
 .emotionResult {
-    background-color: white;
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
-    color: #333;
+    color: whitesmoke;
   }
   
 .mainEmotion {
@@ -148,7 +141,6 @@
 }
   
 .emotionItem {
-    background-color: #f0f0f0;
     border-radius: 10px;
     padding: 10px;
     margin: 5px;
@@ -159,7 +151,6 @@
 .buttonContainer {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
 }
 
 .closeBtn, .saveBtn {
@@ -184,4 +175,46 @@
   }
 
 
-/* 원형게이지 */
+/* 원형 게이지 스타일 */
+.progressCircle {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 20px auto;
+}
+
+.progressCircle svg {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+}
+
+.progressCircle circle {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke-width: 20;
+    stroke: #ff9f00;
+    cx: 70;
+    cy: 70;
+    r: 60;
+    stroke-dasharray: 377;
+    stroke-dashoffset: 0;
+}
+
+.progressCircle circle:nth-child(2) {
+    stroke: white; /* 게이지 색상 */
+    stroke-linecap: round;
+    stroke-dashoffset: 377; /* 초기 상태에서 가려진 상태 */
+    transition: stroke-dashoffset 1s ease; /* 애니메이션 */
+}
+
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+}
