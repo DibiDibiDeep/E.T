@@ -6,14 +6,16 @@ body {
 
 #wrap {
     max-width: 600px;
+    height: 600px;
     margin: 0 auto;
     position: relative; 
 }
 
 #video {
-    width: 100%;
-    border: 10px solid yellow; 
+    width: 95%;
+    border: 10px ridge yellow; 
     transform: scaleX(-1);
+
 }
 
 #overlay {
@@ -79,7 +81,7 @@ body {
 
 #modalContent {
     background-color: yellow;
-    margin: 0 auto;
+    margin:  200px auto;
     padding: 15px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -107,8 +109,6 @@ body {
 /* 감정 이름 애니메이션 */
 .emotion{
     font-size: 2rem;
-    
-
 }
 
 .emotionName {
@@ -158,7 +158,7 @@ body {
 }
 
 .progressCircle circle:nth-child(2) {
-    stroke: #4caf50; /* 게이지 색상 */
+    stroke: #fad400; /* 게이지 색상 */
     stroke-linecap: round;
     stroke-dashoffset: 377; /* 초기 상태에서 가려진 상태 */
     transition: stroke-dashoffset 1s ease; /* 애니메이션 */
@@ -171,27 +171,6 @@ body {
     transform: translate(-50%, -50%);
     font-size: 1.5rem;
     font-weight: bold;
-}
-
-/* 성공 메시지 스타일 */
-.successMessage {
-    position: absolute;
-    font-size: 6rem; /* 크기 조정 */
-    color: #4caf50; /* 색상 */
-    font-weight: bold;
-    margin-top: 20px;
-    animation: successFadeIn 1s ease forwards;
-    opacity: 0;
-    text-align: center; /* 가운데 정렬 */
-}
-
-@keyframes successFadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
 }
 
 /* 하얗게 반짝이는 효과 */

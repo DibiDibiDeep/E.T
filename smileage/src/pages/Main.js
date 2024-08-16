@@ -95,13 +95,9 @@ const App = () => {
                 current = end;
                 clearInterval(interval);
 
-                // 감정이 "HAPPY"이고 확률이 90% 이상일 때 "성공" 표시
-                if (emotionName === "HAPPY" && current >= 0.5) {
-                    setShowSuccess(true);
-                }
             }
-            setDisplayedProbability(current.toFixed(10)); // 소수점 첫째 자리까지 표시
-        }, 20); // 20ms마다 업데이트 (약 1초 동안 증가)
+            setDisplayedProbability(current.toFixed(10)); 
+        }, 20); // 20ms마다 업데이트 
     };
 
     const startCountdown = () => {
@@ -143,7 +139,6 @@ const App = () => {
     return (
         <div id={styles.wrap}>
             <div id={styles.header}>
-                <img src="smileage/src/images/logo.png" alt="Logo" /><br />
                 <h1>얼굴 근육에 smileage를 쌓아라!</h1>
             </div>
             <div>
@@ -183,9 +178,6 @@ const App = () => {
                         <div className={styles.percentage}>{displayedProbability}%</div>
                     </div>
 
-                    {/* 성공 메시지 */}
-                    {showSuccess && <p className={styles.successMessage}>스마일리지 획득!</p>}
-                    
                     <button id={styles.closeModal} onClick={closeModal}>닫기</button>
                 </div>
             )}
