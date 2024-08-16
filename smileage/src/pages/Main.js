@@ -85,7 +85,7 @@ const App = () => {
 
     const animateProbability = (start, end) => {
         let emotionProbability = start;
-        const increment = (end - start) / 100; // 50번에 걸쳐 천천히 증가
+        const increment = (end - start) / 100;
         const interval = setInterval(() => {
             emotionProbability += increment;
             if (emotionProbability >= end) {
