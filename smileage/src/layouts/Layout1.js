@@ -7,9 +7,9 @@ function Layout1() {
 
     return(
         <>
-            <Header />
+            {/* <Header /> */}
             <Outlet />
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }
