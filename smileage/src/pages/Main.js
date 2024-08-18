@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import styles from './Main.module.css';
 import html2canvas from 'html2canvas';
 
@@ -15,19 +14,17 @@ const emotionTranslations = {
 };
 
 const translateEmotion = (emotion) => {
-    return emotionTranslations[emotion] || emotion;
+    return emotionTranslations[emotion] || emotion; // 매핑이 없으면 원래 감정 이름을 반환
 };
 
 function Main() {
     const videoRef = useRef(null);
-    const canvasRef = useRef(null);
     const [predictions, setPredictions] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [message, setMessage] = useState('');
+    const [countdown, setCountdown] = useState(0);
     const [capturedImage, setCapturedImage] = useState(null);
     const [displayedProbability, setDisplayedProbability] = useState(0);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [mileage, setMileage] = useState(0);
-    const [captureCount, setCaptureCount] = useState(0);
 
     const getUserCamera = () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -43,20 +40,33 @@ function Main() {
 
     useEffect(() => {
         getUserCamera();
-    }, []);
+    }, [videoRef]);
 
-    const captureFrame = () => {
-        const canvas = canvasRef.current;
+    const captureImage = () => {
+        setCountdown(3);
+        const countdownInterval = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev === 1) {
+                    clearInterval(countdownInterval);
+                    takePicture();
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    const takePicture = () => {
+        const canvas = document.createElement('canvas');
         const video = videoRef.current;
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        return new Promise((resolve) => {
-            canvas.toBlob((blob) => {
-                resolve(new File([blob], 'frame.jpg', { type: 'image/jpeg' }));
-            }, 'image/jpeg');
-        });
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+            const file = new File([blob], 'test.jpg', { type: 'image/jpg' });
+            setCapturedImage(URL.createObjectURL(blob));
+            sendToServer(file);
+        }, 'image/jpg');
     };
 
     const sendToServer = async (file) => {
@@ -69,55 +79,20 @@ function Main() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            return response.data.predictions;
+            setPredictions(response.data.predictions);
+            animateProbability(0, Math.round(response.data.predictions[0].probability * 100));
+            setShowModal(true);
         } catch (error) {
-            console.error('Error sending image to server:', error);
-            return null;
+            console.error('Error sending image to server:', error.response ? error.response.data : error.message);
+            setMessage(`Error: ${error.response?.data?.error || 'Unknown error occurred'}`);
+            setShowModal(true);
         }
-    };
-
-    const startAnalyzing = async () => {
-        if (captureCount >= 5) {
-            alert("일일 최대 캡처 횟수를 초과했습니다.");
-            return;
-        }
-
-        setIsAnalyzing(true);
-        let frameCount = 0;
-        const maxFrames = 50; // 5초 동안 분석 (10 FPS * 5초)
-
-        while (isAnalyzing && frameCount < maxFrames) {
-            const file = await captureFrame();
-            const predictions = await sendToServer(file);
-            
-            if (predictions && predictions.length > 0) {
-                const happyPrediction = predictions.find(p => p.class === "happy");
-                if (happyPrediction && happyPrediction.probability >= 0.7) {
-                    setCapturedImage(canvasRef.current.toDataURL('image/jpeg'));
-                    setPredictions(predictions);
-                    setDisplayedProbability(Math.round(happyPrediction.probability * 100));
-                    setShowModal(true);
-                    setIsAnalyzing(false);
-                    setMileage(prev => prev + 20);
-                    setCaptureCount(prev => prev + 1);
-                    break;
-                }
-            }
-            
-            frameCount++;
-            await new Promise(resolve => setTimeout(resolve, 100)); // 10 FPS
-        }
-
-        if (frameCount >= maxFrames) {
-            alert("행복한 표정을 찾지 못했습니다. 다시 시도해주세요!");
-        }
-
-        setIsAnalyzing(false);
     };
 
     const handleClose = () => {
         setShowModal(false);
         setDisplayedProbability(0);
+        setCountdown(0);
     };
 
     const handleSave = () => {
@@ -125,9 +100,22 @@ function Main() {
         html2canvas(modalContent).then((canvas) => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'happy-moment.png';
+            link.download = 'modal-image.png';
             link.click();
         });
+    };
+
+    const animateProbability = (start, end) => {
+        let emotionProbability = start;
+        const increment = (end - start) / 100;
+        const interval = setInterval(() => {
+            emotionProbability += increment;
+            if (emotionProbability >= end) {
+                emotionProbability = end;
+                clearInterval(interval);
+            }
+            setDisplayedProbability(emotionProbability.toFixed(2)); // 소수점 둘째 자리까지
+        }, 30); // 30ms마다 업데이트 
     };
 
     return (
@@ -137,21 +125,19 @@ function Main() {
                     <div className={styles.boxWrapper}>
                         <div className={styles.mainText}>
                             <div className={styles.logo1}>
-                                <img src='./img/logo1.png' alt="Logo" />
+                                <img src='./img/logo2.png' alt="Logo" />
                             </div>
                             <hr className={styles.line1} />
-                            <div className={styles.mileageInfo}>
-                                <span>오늘의 마일리지: {mileage}</span>
-                                <span>남은 횟수: {5 - captureCount}/5</span>
-                            </div>
                             <div className={styles.camBox}>
                                 <div className={styles.videoWrapper}>
                                     <video className={styles.video} ref={videoRef}></video>
-                                    <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                                    {countdown > 0 && (
+                                        <div className={styles.countdownOverlay}>
+                                            {countdown}
+                                        </div>
+                                    )}
                                 </div>
-                                <button onClick={startAnalyzing} className={styles.btn1} disabled={isAnalyzing}>
-                                    {isAnalyzing ? 'Analyzing...' : 'Capture'}
-                                </button>
+                                <button onClick={captureImage} className={styles.btn1}>Capture</button>
                             </div>
                             <Modal show={showModal} className={styles.modalBox}>
                                 <Modal.Body className={styles.modalContent}>
@@ -162,7 +148,7 @@ function Main() {
                                     )}
                                     <div className={styles.emotionResult}>
                                         <div>
-                                            Smileage #{captureCount}
+                                            Smileage #1
                                         </div>
                                         {predictions.length > 0 && (
                                             <>
@@ -178,13 +164,11 @@ function Main() {
                                                             }}
                                                         ></circle>
                                                     </svg>
-                                                    <div className={styles.percentage}>{translateEmotion(predictions[0].class)}: {displayedProbability}%</div>
+                                                    <div className={styles.percentage}>{translateEmotion(predictions[0].class)}: {Math.round(predictions[0].probability * 100)}%</div>
+                                                    
                                                 </div>
                                             </>
                                         )}
-                                    </div>
-                                    <div className={styles.mileageGain}>
-                                        <span>획득한 마일리지: 20</span>
                                     </div>
                                 </Modal.Body>
                                 <Modal.Footer className={styles.buttonContainer}>
