@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+   frontend:
+    image: miniproj-react:latest
+    container_name: react-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+
+   backend:
+    image: miniproj-fastapi:latest
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
