@@ -1,0 +1,11 @@
+header{
+    display: flex;
+    margin: 0 auto;
+    margin-top: 38px;
+    width: 1500px;
+    height: 44px;
+    background-color: #ff9f00;
+    border-radius: 10px;
+}
+
+   

@@ -6,7 +6,7 @@ function App() {
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout1/>}>
+        <Route path="/" element={<Layout1 />}>
           <Route index element={<Main />}/>
         </Route>
       </Routes>

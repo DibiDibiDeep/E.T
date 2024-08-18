@@ -9,7 +9,6 @@ function Layout1() {
         <>
             <Header />
             <Outlet />
-
             <Footer />
         </>
     )

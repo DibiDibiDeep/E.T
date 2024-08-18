@@ -1,0 +1,104 @@
+:root {
+    --primary-color: #ffd1a9; /* 부드러운 오렌지 톤 */
+    --secondary-color: #ffe8a1; /* 연한 노란색 */
+    --accent-color: #f18383; /* 밝은 파스텔 핑크 */
+    --text-color: #666666; /* 연한 회색 */
+    --background-color: #fffaf0; /* 부드러운 크림색 */
+  }
+  
+  .smileagePage {
+    background: linear-gradient(to bottom, var(--background-color), var(--primary-color));
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    color: var(--text-color);
+  }
+    
+  .logo {
+    font-size: 24px;
+  }
+  
+  nav a {
+    margin: 0 10px;
+    color: var(--background-color);
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .menuIcon {
+    font-size: 24px;
+  }
+  
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+  }
+  
+  .title1 {
+    font-weight: 500;
+    margin-top: 15%;
+  }
+  
+  p {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .primary {
+    background-color: var(--accent-color);
+    color: white;
+  }
+  
+  .flag {
+    position: absolute;
+    top: 20%;
+    left: 43%;
+    width: 200px;
+    height: 200px;
+  }
+  
+  /* .flag::after {
+    content: '😊';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-4deg);
+    font-size: 40px;
+  }
+   */

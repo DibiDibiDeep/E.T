@@ -1,0 +1,220 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #f8f9fa;
+}
+
+.containerBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.boxWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mainText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.logo1 img {
+    max-width: 100%;
+    height: auto;
+}
+
+.line1 {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #dee2e6;
+    margin: 20px 0;
+}
+
+.camBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.videoWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+}
+
+.video {
+    width: 100%;
+    height: auto;
+}
+
+.countdownOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+}
+
+.btn1 {
+    margin-top: 20px;
+    border: none;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #ff9f00;
+    color: white;
+    font-weight: bold;
+}
+
+.modalBox{
+    border-radius: 40px;
+}
+
+.modalContent {
+    background-color: #ff9f00;
+    border-radius: 5px;
+    color: white;
+}
+
+.modalTitle {
+    display: flex;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.imagePreview {
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.capturedImage {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.emotionResult {
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: whitesmoke;
+  }
+  
+.mainEmotion {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+  
+.otherEmotions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+  
+.emotionItem {
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    flex: 1 1 40%;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.closeBtn, .saveBtn {
+    background-color: white;
+    border: none;
+    color: #ff9f00;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    flex: 1;
+    margin: 0 10px;
+}
+
+.closeBtn:hover, .saveBtn:hover {
+    background-color: #ff9f00;
+}
+
+.modalContent ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+
+/* 원형 게이지 스타일 */
+.progressCircle {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 20px auto;
+}
+
+.progressCircle svg {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+}
+
+.progressCircle circle {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke-width: 20;
+    stroke: #ff9f00;
+    cx: 70;
+    cy: 70;
+    r: 60;
+    stroke-dasharray: 377;
+    stroke-dashoffset: 0;
+}
+
+.progressCircle circle:nth-child(2) {
+    stroke: white; /* 게이지 색상 */
+    stroke-linecap: round;
+    stroke-dashoffset: 377; /* 초기 상태에서 가려진 상태 */
+    transition: stroke-dashoffset 1s ease; /* 애니메이션 */
+}
+
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+}
